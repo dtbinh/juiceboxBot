@@ -1,5 +1,3 @@
-import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.port.MotorPort;
 import lejos.robotics.RegulatedMotor;
 
 public class robotMain {
@@ -9,8 +7,11 @@ public class robotMain {
 	}
 	
 	static void run() {
-		RegulatedMotor shootingMotor = new EV3LargeRegulatedMotor(MotorPort.D);
+		RegulatedMotor[] motors = robot_move.initializeMotor();
 		
-		robot_move.shoot(60, shootingMotor);
+		robot_move.shoot(360, motors[3]);
+		robot_move.moveForward(5000, motors);
+		robot_move.moveBackward(5000, motors);
+		robot_move.closeAllMotor(motors);
 	}
 }
