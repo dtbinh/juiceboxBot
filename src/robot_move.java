@@ -18,6 +18,7 @@ public class robot_move {
 		return motorArray;
 	}
 	
+	// Triggers shooting
 	public static void shoot(int degree, RegulatedMotor motor) {
 		try {
 				motor.setAcceleration(5000);
@@ -31,7 +32,8 @@ public class robot_move {
 			}
 	}
 	
-	public static void moveForward(int speed, RegulatedMotor[] motors) {
+	// Moves the robot Forward
+	public static void moveForward(int speed, int rotation, RegulatedMotor[] motors) {
 		try {
 			motors[1].setAcceleration(speed);
 			motors[2].setAcceleration(speed);
@@ -39,20 +41,20 @@ public class robot_move {
 			motors[1].setSpeed(speed);
 			motors[2].setSpeed(speed);
 			
-			motors[1].backward();
-			motors[2].forward();
-			
-			Delay.msDelay(2000);
-			
-			motors[1].stop();
-			motors[2].stop();
+			motors[1].rotate(-rotation,true);
+			motors[2].rotate(rotation,true);
+//			Delay.msDelay(2000);
+//			
+//			motors[1].stop(true);
+//			motors[2].stop(true);
 		} catch(Exception e){
 			e.printStackTrace();
 			closeAllMotor(motors);
 		}
 	}
 	
-	public static void moveBackward(int speed, RegulatedMotor[] motors) {
+	// Moves the robot Backwards
+	public static void moveBackward(int speed, int rotation, RegulatedMotor[] motors) {
 		try {
 			motors[1].setAcceleration(speed);
 			motors[2].setAcceleration(speed);
@@ -60,27 +62,66 @@ public class robot_move {
 			motors[1].setSpeed(speed);
 			motors[2].setSpeed(speed);
 			
-			motors[1].forward();
-			motors[2].backward();
-			
-			Delay.msDelay(2000);
-			
-			motors[1].stop();
-			motors[2].stop();
+			motors[1].rotate(rotation,true);
+			motors[2].rotate(-rotation,true);
+//			Delay.msDelay(2000);
+//			
+//			motors[1].stop(true);
+//			motors[2].stop(true);
 		} catch(Exception e){
 			e.printStackTrace();
 			closeAllMotor(motors);
 		}
 	}
 	
-	public static void moveLeft(int degree, RegulatedMotor motor) {
-		
+	// Turns the robot left
+	public static void turnLeft(int degree, RegulatedMotor[] motors) {
+		try {
+			motors[0].setAcceleration(500);
+			
+			motors[0].setSpeed(500);
+
+			motors[0].rotate(degree,true);
+//			Delay.msDelay(2000);
+//			
+//			motors[0].stop(true);
+//			motors[1].stop(true);
+//			motors[2].stop(true);
+		} catch(Exception e) {
+			e.printStackTrace();
+			closeAllMotor(motors);
+		}
 	}
 	
-	public static void moveRight(int degree, RegulatedMotor motor) {
-		
+	// Turns the robot right
+	public static void turnRight(int degree, RegulatedMotor[] motors) {
+		try {
+			motors[0].setAcceleration(500);
+			
+			motors[0].setSpeed(500);
+			
+			motors[0].rotate(-degree,true);
+//			Delay.msDelay(2000);
+//			
+//			motors[0].stop(true);
+//			motors[1].stop(true);
+//			motors[2].stop(true);
+		} catch(Exception e) {
+			e.printStackTrace();
+			closeAllMotor(motors);
+		}
 	}
 	
+	public static void resetMotors(RegulatedMotor[] motors) {
+		for(RegulatedMotor m : motors) {
+			m.rotateTo(90,true);
+		}
+		
+		System.out.println("Resetting Motors...");
+		Delay.msDelay(5000);
+	}
+	
+	// Closes all the motor ports
 	public static void closeAllMotor(RegulatedMotor[] motors) {
 		for (RegulatedMotor motor : motors) {
 			motor.close();
