@@ -43,10 +43,10 @@ public class robot_move {
 			
 			motors[1].rotate(-rotation,true);
 			motors[2].rotate(rotation,true);
-//			Delay.msDelay(2000);
-//			
-//			motors[1].stop(true);
-//			motors[2].stop(true);
+			Delay.msDelay(100);
+			
+			motors[1].stop(true);
+			motors[2].stop(true);
 		} catch(Exception e){
 			e.printStackTrace();
 			closeAllMotor(motors);
@@ -64,10 +64,10 @@ public class robot_move {
 			
 			motors[1].rotate(rotation,true);
 			motors[2].rotate(-rotation,true);
-//			Delay.msDelay(2000);
-//			
-//			motors[1].stop(true);
-//			motors[2].stop(true);
+			Delay.msDelay(100);
+			
+			motors[1].stop(true);
+			motors[2].stop(true);
 		} catch(Exception e){
 			e.printStackTrace();
 			closeAllMotor(motors);
@@ -78,15 +78,21 @@ public class robot_move {
 	public static void turnLeft(int degree, RegulatedMotor[] motors) {
 		try {
 			motors[0].setAcceleration(500);
+			motors[1].setAcceleration(500);
+			motors[2].setAcceleration(500);
 			
 			motors[0].setSpeed(500);
+			motors[1].setSpeed(500);
+			motors[2].setSpeed(500);
 
 			motors[0].rotate(degree,true);
-//			Delay.msDelay(2000);
-//			
-//			motors[0].stop(true);
-//			motors[1].stop(true);
-//			motors[2].stop(true);
+			motors[1].rotate(degree,true);
+			motors[2].rotate(degree,true);
+			Delay.msDelay(100);
+			
+			motors[0].stop(true);
+			motors[1].stop(true);
+			motors[2].stop(true);
 		} catch(Exception e) {
 			e.printStackTrace();
 			closeAllMotor(motors);
@@ -97,28 +103,36 @@ public class robot_move {
 	public static void turnRight(int degree, RegulatedMotor[] motors) {
 		try {
 			motors[0].setAcceleration(500);
+			motors[1].setAcceleration(500);
+			motors[2].setAcceleration(500);
 			
 			motors[0].setSpeed(500);
+			motors[1].setSpeed(500);
+			motors[2].setSpeed(500);
 			
 			motors[0].rotate(-degree,true);
-//			Delay.msDelay(2000);
-//			
-//			motors[0].stop(true);
-//			motors[1].stop(true);
-//			motors[2].stop(true);
+			motors[1].rotate(-degree,true);
+			motors[2].rotate(-degree,true);
+			Delay.msDelay(100);
+			
+			motors[0].stop(true);
+			motors[1].stop(true);
+			motors[2].stop(true);
 		} catch(Exception e) {
 			e.printStackTrace();
 			closeAllMotor(motors);
 		}
 	}
 	
+	
+	
 	public static void resetMotors(RegulatedMotor[] motors) {
+		System.out.println("Resetting Motors...");
 		for(RegulatedMotor m : motors) {
 			m.rotateTo(90,true);
+			Delay.msDelay(500);
+			m.stop();
 		}
-		
-		System.out.println("Resetting Motors...");
-		Delay.msDelay(5000);
 	}
 	
 	// Closes all the motor ports
@@ -127,5 +141,4 @@ public class robot_move {
 			motor.close();
 		}
 	}
-	
 }
