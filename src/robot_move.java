@@ -7,6 +7,7 @@ public class robot_move {
 	
 	private final static int MAX_MOTOR_PORTS = 4;
 	
+	// Creates the initial motors (Should only be called once.)
 	public static RegulatedMotor[] initializeMotor() {
 		RegulatedMotor[] motorArray = new RegulatedMotor[MAX_MOTOR_PORTS];
 		
@@ -21,8 +22,6 @@ public class robot_move {
 	// Triggers shooting
 	public static void shoot(int degree, RegulatedMotor motor) {
 		try {
-				motor.setAcceleration(5000);
-				motor.setSpeed(5000);
 				motor.rotate(degree);
 				
 				Delay.msDelay(2000);
@@ -35,12 +34,6 @@ public class robot_move {
 	// Moves the robot Forward
 	public static void moveForward(int speed, int rotation, RegulatedMotor[] motors) {
 		try {
-			motors[1].setAcceleration(speed);
-			motors[2].setAcceleration(speed);
-			
-			motors[1].setSpeed(speed);
-			motors[2].setSpeed(speed);
-			
 			motors[1].rotate(-rotation,true);
 			motors[2].rotate(rotation,true);
 			Delay.msDelay(100);
@@ -56,12 +49,6 @@ public class robot_move {
 	// Moves the robot Backwards
 	public static void moveBackward(int speed, int rotation, RegulatedMotor[] motors) {
 		try {
-			motors[1].setAcceleration(speed);
-			motors[2].setAcceleration(speed);
-			
-			motors[1].setSpeed(speed);
-			motors[2].setSpeed(speed);
-			
 			motors[1].rotate(rotation,true);
 			motors[2].rotate(-rotation,true);
 			Delay.msDelay(100);
@@ -77,14 +64,6 @@ public class robot_move {
 	// Turns the robot left
 	public static void turnLeft(int degree, RegulatedMotor[] motors) {
 		try {
-			motors[0].setAcceleration(500);
-			motors[1].setAcceleration(500);
-			motors[2].setAcceleration(500);
-			
-			motors[0].setSpeed(500);
-			motors[1].setSpeed(500);
-			motors[2].setSpeed(500);
-
 			motors[0].rotate(degree,true);
 			motors[1].rotate(degree,true);
 			motors[2].rotate(degree,true);
@@ -102,14 +81,6 @@ public class robot_move {
 	// Turns the robot right
 	public static void turnRight(int degree, RegulatedMotor[] motors) {
 		try {
-			motors[0].setAcceleration(500);
-			motors[1].setAcceleration(500);
-			motors[2].setAcceleration(500);
-			
-			motors[0].setSpeed(500);
-			motors[1].setSpeed(500);
-			motors[2].setSpeed(500);
-			
 			motors[0].rotate(-degree,true);
 			motors[1].rotate(-degree,true);
 			motors[2].rotate(-degree,true);
@@ -124,12 +95,21 @@ public class robot_move {
 		}
 	}
 	
+	// Sets the speed of a single motor
+	public static void setMotorSpeed(RegulatedMotor motor, int speed) {
+		motor.setSpeed(speed);
+	}
 	
+	// Sets the acceleration of the motor
+	public static void setMotorAcceleration(RegulatedMotor motor, int acceleration) {
+		motor.setAcceleration(acceleration);
+	}
 	
-	public static void resetMotors(RegulatedMotor[] motors) {
+	// Resets motors to a specific degree
+	public static void resetMotors(RegulatedMotor[] motors, int degree) {
 		System.out.println("Resetting Motors...");
 		for(RegulatedMotor m : motors) {
-			m.rotateTo(90,true);
+			m.rotateTo(degree,true);
 			Delay.msDelay(500);
 			m.stop();
 		}
