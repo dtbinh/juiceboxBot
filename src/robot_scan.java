@@ -1,4 +1,3 @@
-import lejos.utility.Delay;
 
 public class robot_scan {
 	
@@ -14,13 +13,18 @@ public class robot_scan {
 	}
 	
 	public void initializeField() {
-		ev3.setAllMotorsAccel(500);
-		ev3.setAllMotorsSpeed(500);
-		Delay.msDelay(1000);
-		ev3.moveForward(720, 1000);
-		Delay.msDelay(1000);
-		ev3.moveBackward(720, 1000);
-		Delay.msDelay(1000);
+		
+		while(!ev3.isEscDown()) {
+			System.out.println(ev3.getReading());
+		}
+		
+//		ev3.setAllMotorsAccel(50);
+//		ev3.setAllMotorsSpeed(50);
+//		Delay.msDelay(1000);
+//		ev3.moveForward(1080, 5000);
+//		Delay.msDelay(1000);
+//		ev3.moveBackward(1080, 5000);
+//		Delay.msDelay(1000);
 
 	}
 	
