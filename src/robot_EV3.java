@@ -4,6 +4,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.NXTColorSensor;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.navigation.OmniPilot;
 import lejos.utility.Delay;
@@ -11,24 +12,31 @@ import lejos.utility.Delay;
 public class robot_EV3 {
 	
 	private final int MAX_MOTOR_PORTS = 4;
-	private final int MAX_COLOR_SENSORS = 1; // Subjected to change
 	
 	private RegulatedMotor[] motorArray;
-	private EV3ColorSensor sensor;
+	
+	private EV3ColorSensor colorSensor1; // Left
 	
 	private int currentRotation = 0;
 	
 	public robot_EV3() {
 		
 		initializeMotors();
-		System.out.println("Initialized Motors");
+		System.out.println("Init Motors");
 		initializeSensors();
-		System.out.println("Initialized Sensors");
+		System.out.println("Init Sensors");
 		
-		Button.LEDPattern(1);
-		Sound.setVolume(100);
+		System.out.println("Init Complete");
+		System.out.println("Click ESC Button...");
+		
+		Sound.setVolume(50);
 		Sound.playTone(100, 1000);
-		System.out.println("Initialization Complete");
+		
+		for(int i=0; i<4; i++) {
+			Button.LEDPattern(i);
+			Delay.msDelay(200);
+		}
+		Button.LEDPattern(0);
 		
 		while(!isEscDown()) {
 			// Endless loop till user presses ESC on the EV3
@@ -54,13 +62,16 @@ public class robot_EV3 {
 	
 	// Creates the initial sensors (Should only be called once.)
 	public void initializeSensors() {
-		sensor = new EV3ColorSensor(SensorPort.S2);
-		
-		//colorSensorArray[1] = new EV3ColorSensor(SensorPort.S3);
+		colorSensor1 = new EV3ColorSensor(SensorPort.S1);
+		colorSensor1.setCurrentMode("RGB");
 	}
 	//================== End of Initialization Methods ==================
 	
 	//================== Start of Other Methods ==================
+	public int getCurrentRotation() {
+		return currentRotation;
+	}
+	
 	public boolean isEscDown() {
 		return Button.ESCAPE.isDown();
 	}
@@ -80,7 +91,9 @@ public class robot_EV3 {
 	
 	public void moveForward(int rotation, int delay) {
 		try {
-			currentRotation++;
+			currentRotation += 30;
+			System.out.println("Rotation: "+currentRotation);
+			
 			motorArray[1].rotateTo(-rotation,true);
 			motorArray[2].rotateTo(rotation);
 			Delay.msDelay(delay);
@@ -95,7 +108,9 @@ public class robot_EV3 {
 	
 	public void moveBackward(int rotation, int delay) {
 		try {
-			currentRotation--;
+			currentRotation += -30;
+			System.out.println("Rotation: "+currentRotation);
+			
 			motorArray[1].rotateTo(rotation,true);
 			motorArray[2].rotateTo(-rotation);
 			Delay.msDelay(delay);
@@ -140,9 +155,9 @@ public class robot_EV3 {
 
 	public void turnLeft(int degree, int delay) {
 		try {
-			motorArray[0].rotateTo(degree,true);
-			motorArray[1].rotateTo(degree,true);
-			motorArray[2].rotateTo(degree,true);
+			motorArray[0].rotate(degree,true);
+			motorArray[1].rotate(degree,true);
+			motorArray[2].rotate(degree,true);
 			Delay.msDelay(delay);
 			
 			motorArray[0].stop(true);
@@ -156,9 +171,9 @@ public class robot_EV3 {
 	
 	public void turnRight(int degree, int delay) {
 		try {
-			motorArray[0].rotateTo(-degree,true);
-			motorArray[1].rotateTo(-degree,true);
-			motorArray[2].rotateTo(-degree,true);
+			motorArray[0].rotate(-degree,true);
+			motorArray[1].rotate(-degree,true);
+			motorArray[2].rotate(-degree,true);
 			Delay.msDelay(delay);
 			
 			motorArray[0].stop(true);
@@ -195,19 +210,33 @@ public class robot_EV3 {
 			motor.close();
 		}
 	}
+	
+	//Motor Scan Methods
+	public void moveForwardScan(int rotation, int delay) {
+		try {
+			currentRotation += 15;
+			
+			motorArray[2].rotateTo(-currentRotation,true);
+			motorArray[0].rotateTo(currentRotation,true);
+			Delay.msDelay(delay);
+		
+			motorArray[2].stop(true);
+			motorArray[0].stop(true);
+		} catch(Exception e){
+			e.printStackTrace();
+			closeAllMotor();
+		}
+	}
 	//================== End of Motor Methods ==================
 	
 	//================== Start of Sensor Methods ==================
 	public int getReading() {
-		int reading = sensor.getColorID();
+		int reading = colorSensor1.getColorID();
 		return reading;
 	}
 	
 	public void closeAllColorSensors() {
-		for(int i=0; i<MAX_COLOR_SENSORS-1; i++) {
-			sensor.close();
-//			colorSensorArray[i].close();
-		}
+		colorSensor1.close();
 	}
 	//================== End of Motor Methods ==================
 }
