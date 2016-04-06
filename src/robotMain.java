@@ -29,7 +29,7 @@ public class robotMain {
 	 */
 	static void run() {	
 		robot_EV3 ev3 = new robot_EV3();
-		robot_scan scan = new robot_scan(ev3);
+		robot_scan scan = new robot_scan(ev3, ev3.getSideScan());
 		
 //		while(scan.isScanFinished()) {
 //			

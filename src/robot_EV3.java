@@ -18,6 +18,7 @@ public class robot_EV3 {
 	private EV3ColorSensor colorSensor1; // Left
 	
 	private int currentRotation = 0;
+	private int side = 0; // 0 == LEFT, 1 == RIGHT
 	
 	public robot_EV3() {
 		
@@ -27,7 +28,7 @@ public class robot_EV3 {
 		System.out.println("Init Sensors");
 		
 		System.out.println("Init Complete");
-		System.out.println("Click ESC Button...");
+		System.out.println("Continue = ESC\nLeft Side Scan\n=LEFT\nRight Side Scan\n=RIGHT");
 		
 		Sound.setVolume(50);
 		Sound.playTone(100, 1000);
@@ -39,6 +40,15 @@ public class robot_EV3 {
 		Button.LEDPattern(0);
 		
 		while(!isEscDown()) {
+			if(Button.LEFT.isDown()) {
+				side = 0;
+				System.out.println("SCAN == LEFT");
+			}
+			
+			if(Button.RIGHT.isDown()) {
+				side = 1;
+				System.out.println("SCAN == RIGHT");
+			}
 			// Endless loop till user presses ESC on the EV3
 		}
 		Delay.msDelay(2000);
@@ -74,6 +84,10 @@ public class robot_EV3 {
 	
 	public boolean isEscDown() {
 		return Button.ESCAPE.isDown();
+	}
+	
+	public int getSideScan() {
+		return side;
 	}
 	//================== End of Other Methods ==================
 	

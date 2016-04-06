@@ -13,9 +13,11 @@ public class robot_scan {
 	
 	private int correction = 2;
 	private int previousNum = 0;
+	private int sideScan = 0;
 	
-	public robot_scan(robot_EV3 robot) {
+	public robot_scan(robot_EV3 robot,int currentSide) {
 		ev3 = robot;
+		sideScan = currentSide;
 		initializeField();
 	}
 	
@@ -26,15 +28,33 @@ public class robot_scan {
 			
 			System.out.println(reading);
 			
-			if(previousNum != reading) {
-				ev3.moveForwardScan(30, 100);
+			if(sideScan == 0) { // Left Side of the line
+				if(previousNum != reading) {
+					ev3.moveForwardScan(30, 100);
+				} else {
+					if(reading >= 0 && reading < 6) {
+						ev3.turnLeft(correction,50);
+					}else if(reading == 7) {
+						break;
+					}else if(reading >= 6) {
+						ev3.turnRight(correction,50);
+					}else {
+						ev3.moveForwardScan(5, 100);
+					}
+				}
 			} else {
-				if(reading >= 0 && reading < 6) {
-					ev3.turnLeft(correction,50);
-				}else if(reading >= 6) {
-					ev3.turnRight(correction,50);
-				}else {
-					ev3.moveForwardScan(5, 100);
+				if(previousNum != reading) {
+					ev3.moveForwardScan(30, 100);
+				} else {
+					if(reading >= 0 && reading < 6) {
+						ev3.turnRight(correction,50);
+					}else if(reading == 7) {
+						break;
+					}else if(reading >= 6) {
+						ev3.turnLeft(correction,50);
+					}else {
+						ev3.moveForwardScan(5, 100);
+					}
 				}
 			}
 			
@@ -49,6 +69,8 @@ public class robot_scan {
 //		ev3.moveBackward(1080, 5000);
 //		Delay.msDelay(1000);
 
+		scanFinish = true;
+		Sound.playTone(700, 1000);
 	}
 	
 	public boolean isScanFinished() {
