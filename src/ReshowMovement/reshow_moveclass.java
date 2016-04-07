@@ -38,7 +38,7 @@ public class reshow_moveclass {
 	    	System.out.println(x);
 	    	if(x.equals("Forward"))
 	    	{
-	    		moveForwardScan(scanner.nextInt()*5,300);
+	    		moveForwardScan(scanner.nextInt()*4,300);
 	    	}else if(x.equals("Left"))
 	    	{
 				turnLeft(scanner.nextInt(),50);
