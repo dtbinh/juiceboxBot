@@ -1,10 +1,12 @@
+import java.io.IOException;
+
 import lejos.hardware.Button;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.RegulatedMotor;
 
 public class robotMain {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		run();
 	}
 	
@@ -27,7 +29,7 @@ public class robotMain {
 	 * - Default speed and acceleration is 100
 	 * ====== Notes ======
 	 */
-	static void run() {	
+	static void run() throws IOException {	
 		robot_EV3 ev3 = new robot_EV3();
 		robot_scan scan = new robot_scan(ev3, ev3.getSideScan());
 		
