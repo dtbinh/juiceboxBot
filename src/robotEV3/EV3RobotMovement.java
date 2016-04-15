@@ -11,5 +11,5 @@ public interface EV3RobotMovement {
 	void setSpeedAndAcceleration(int speed, int acceleration);
 	void stopMotors();
 	
-	int getReading();
+	int getReading(int port);
 }

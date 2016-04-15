@@ -2,6 +2,7 @@ package robotEV3;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
@@ -24,9 +25,10 @@ public class EV3Robot implements EV3RobotMovement{
 		System.out.println("Init Motors...");
 		initMotors();
 		System.out.println("Finished Init...");
-		Sound.playTone(TONE_FREQ,TONE_DURATION);
+		//playStartUpSong();
+		playRandom();
 		Button.LEDPattern(3);
-		while(!Button.ENTER.isDown()) { } // Waits for user input.
+		while(!Button.ENTER.isDown()) {} // Waits for user input.
 	}
 	
 	// Should close the sensors and motors.
@@ -38,6 +40,67 @@ public class EV3Robot implements EV3RobotMovement{
 		for(EV3ColorSensor sensor : colorSensorList) {
 			sensor.close();
 		}
+	}
+	
+	private void playRandom() {	
+		while(!Button.ENTER.isDown()) {
+			Sound.playTone(392, 100);
+		}
+	}
+	
+	private int getRandom() {
+		Random random = new Random();
+		int rand = random.nextInt(1000);
+		System.out.println(rand);
+		return rand;
+	}
+	
+	// Plays start up song (Created by Sam :))
+	private void playStartUpSong() {
+		Sound.playTone(659, 150);
+        Sound.playTone(784, 150);
+        Sound.playTone(1319, 600);
+        Sound.playTone(659, 150);
+        Sound.playTone(784, 150);
+        Sound.playTone(1319, 600);
+        Sound.playTone(1480, 450);
+        Sound.playTone(1568, 150);
+        Sound.playTone(1480, 150);
+        Sound.playTone(1568, 150);
+        Sound.playTone(1480, 150);
+        Sound.playTone(1175, 150);
+        Sound.playTone(988, 600);
+        Sound.playTone(988, 300);
+        Sound.playTone(659, 300);
+        Sound.playTone(784, 150);
+        Sound.playTone(880, 150);
+        Sound.playTone(988, 900);
+        Sound.playTone(988, 300);
+        Sound.playTone(659, 300);
+        Sound.playTone(784, 150);
+        Sound.playTone(880, 150);
+        Sound.playTone(740, 900);
+
+        Sound.playTone(659, 150);
+        Sound.playTone(784, 150);
+        Sound.playTone(1319, 600);
+        Sound.playTone(659, 150);
+        Sound.playTone(784, 150);
+        Sound.playTone(1319, 600);
+        Sound.playTone(1480, 450);
+        Sound.playTone(1568, 150);
+        Sound.playTone(1480, 150);
+        Sound.playTone(1568, 150);
+        Sound.playTone(1480, 150);
+        Sound.playTone(1175, 150);
+        Sound.playTone(988, 600);
+        Sound.playTone(988, 300);
+        Sound.playTone(659, 300);
+        Sound.playTone(784, 150);
+        Sound.playTone(880, 150);
+        Sound.playTone(988, 600);
+        Sound.playTone(988, 300);
+        Sound.playTone(659, 1800);
 	}
 	
 	// Initializes the Sensors
@@ -57,6 +120,7 @@ public class EV3Robot implements EV3RobotMovement{
 		colorSensorList = new LinkedList<EV3ColorSensor>();
 		
 		colorSensorList.add(new EV3ColorSensor(SensorPort.S1));
+		colorSensorList.add(new EV3ColorSensor(SensorPort.S2));
 		Button.LEDPattern(1);
 	}
 
@@ -92,23 +156,52 @@ public class EV3Robot implements EV3RobotMovement{
 
 	@Override
 	public void moveLeft(int rotation, boolean immediateReturn) {
+		int speed = 0, acceleration = 0;
+		
 		System.out.println("Moving Left");
 		for(EV3Motor motor : motorList) {
 			String tag = motor.getTag();
+			
 			if(tag.equals("Left") || tag.equals("Right")) {
-				motor.setSpeed_setAcceleration(motor.getSpeed()/3, motor.getAcceleration()/3);
-				motor.rotate(rotation, immediateReturn);
+				speed = motor.getSpeed();
+				acceleration = motor.getAcceleration();
+				motor.setSpeed_setAcceleration(speed/2,acceleration/2);
+				motor.rotate(-rotation, immediateReturn);
 			}
 			
 			if(tag.equals("Back")) {
-				motor.rotate(-rotation, immediateReturn);
+				motor.rotate(rotation * 2, immediateReturn);
 			}
+		}
+		
+		for(EV3Motor motor : motorList) {
+			motor.setSpeed_setAcceleration(speed, acceleration);
 		}
 	}
 
 	@Override
 	public void moveRight(int rotation, boolean immediateReturn) {
+		int speed = 0, acceleration = 0;
 		
+		System.out.println("Moving Left");
+		for(EV3Motor motor : motorList) {
+			String tag = motor.getTag();
+			
+			if(tag.equals("Left") || tag.equals("Right")) {
+				speed = motor.getSpeed();
+				acceleration = motor.getAcceleration();
+				motor.setSpeed_setAcceleration(speed/2,acceleration/2);
+				motor.rotate(rotation, immediateReturn);
+			}
+			
+			if(tag.equals("Back")) {
+				motor.rotate(-rotation * 2, immediateReturn);
+			}
+		}
+		
+		for(EV3Motor motor : motorList) {
+			motor.setSpeed_setAcceleration(speed, acceleration);
+		}
 	}
 	
 	@Override
@@ -141,7 +234,6 @@ public class EV3Robot implements EV3RobotMovement{
 		}
 	}
 
-	
 	@Override
 	public void stopMotors() {
 		for(EV3Motor motor : motorList) {
@@ -149,7 +241,6 @@ public class EV3Robot implements EV3RobotMovement{
 		}
 	}
 
-	
 	@Override
 	public void shoot(int strength) {
 		for(EV3Motor motor : motorList) {
@@ -160,13 +251,11 @@ public class EV3Robot implements EV3RobotMovement{
 		}
 	}
 
-	
 	@Override
-	public int getReading() {
+	public int getReading(int port) {
 		int reading = 0;
-		for(EV3ColorSensor sensor : colorSensorList) {
-			reading = sensor.getColorID();
-		}
+		
+		reading = colorSensorList.get(port).getColorID();
 		
 		return reading;
 	}
