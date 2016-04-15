@@ -25,8 +25,7 @@ public class EV3Robot implements EV3RobotMovement{
 		System.out.println("Init Motors...");
 		initMotors();
 		System.out.println("Finished Init...");
-		//playStartUpSong();
-		playRandom();
+		playStartUpSong();
 		Button.LEDPattern(3);
 		while(!Button.ENTER.isDown()) {} // Waits for user input.
 	}
@@ -44,7 +43,7 @@ public class EV3Robot implements EV3RobotMovement{
 	
 	private void playRandom() {	
 		while(!Button.ENTER.isDown()) {
-			Sound.playTone(392, 100);
+			Sound.playTone(getRandom(), 100);
 		}
 	}
 	
