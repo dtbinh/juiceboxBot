@@ -16,16 +16,13 @@ public class EV3Robot implements EV3RobotMovement{
 	private List<EV3Motor> motorList;
 	private List<EV3ColorSensor> colorSensorList;
 	
-	private final int TONE_DURATION = 1000;
-	private final int TONE_FREQ = 500;
-	
 	public EV3Robot() {
 		System.out.println("Init Sensors...");
 		initSensors();
 		System.out.println("Init Motors...");
 		initMotors();
 		System.out.println("Finished Init...");
-		playStartUpSong();
+		Sound.playTone(600,1000);
 		Button.LEDPattern(3);
 		while(!Button.ENTER.isDown()) {} // Waits for user input.
 	}
@@ -41,21 +38,85 @@ public class EV3Robot implements EV3RobotMovement{
 		}
 	}
 	
-	private void playRandom() {	
+	//============ Start Of Song Section =============================================== (Created by Sam)
+	public void playRandomNotes() {
+		Random random = new Random();
 		while(!Button.ENTER.isDown()) {
-			Sound.playTone(getRandom(), 100);
+			Sound.playTone(294, 1000);
 		}
 	}
 	
-	private int getRandom() {
-		Random random = new Random();
-		int rand = random.nextInt(1000);
-		System.out.println(rand);
-		return rand;
+	public void playSuperMarioTheme() {
+		Sound.playTone(660,100);
+		
 	}
 	
-	// Plays start up song (Created by Sam :))
-	private void playStartUpSong() {
+	public void playZeldaTreasureSong() {
+		Sound.playTone(392, 100);
+		Sound.playTone(440, 100);
+		Sound.playTone(494, 100);
+		Sound.playTone(554, 100);
+		Sound.playTone(392, 100);
+		Sound.playTone(440, 100);
+		Sound.playTone(494, 100);
+		Sound.playTone(554, 100);
+		
+		Sound.playTone(415, 100);
+		Sound.playTone(466, 100);
+		Sound.playTone(523, 100);
+		Sound.playTone(587, 100);
+		Sound.playTone(415, 100);
+		Sound.playTone(466, 100);
+		Sound.playTone(523, 100);
+		Sound.playTone(587, 100);
+		
+		Sound.playTone(440, 100);
+		Sound.playTone(494, 100);
+		Sound.playTone(554, 100);
+		Sound.playTone(622, 100);
+		Sound.playTone(440, 100);
+		Sound.playTone(494, 100);
+		Sound.playTone(554, 100);
+		Sound.playTone(622, 100);
+		
+		Sound.playTone(466, 100);
+		Sound.playTone(523, 100);
+		Sound.playTone(587, 100);
+		Sound.playTone(659, 100);
+		Sound.playTone(466, 100);
+		Sound.playTone(523, 100);
+		Sound.playTone(587, 100);
+		Sound.playTone(659, 100);
+		
+		Sound.playTone(494, 100);
+		Sound.playTone(554, 100);
+		Sound.playTone(622, 100);
+		Sound.playTone(698, 100);
+		
+		Sound.playTone(523, 100);
+		Sound.playTone(587, 100);
+		Sound.playTone(659, 100);
+		Sound.playTone(740, 100);
+		
+		Sound.playTone(554, 100);
+		Sound.playTone(622, 100);
+		Sound.playTone(698, 100);
+		Sound.playTone(784, 100);
+		
+		Sound.playTone(622, 100);
+		Sound.playTone(659, 100);
+		Sound.playTone(740, 100);
+		Sound.playTone(831, 100);
+		
+		Sound.pause(400);
+		
+		Sound.playTone(880, 200);
+		Sound.playTone(932, 200);
+		Sound.playTone(988, 200);
+		Sound.playTone(1047, 600);
+	}
+	
+	public void playSongOfStorms() {
 		Sound.playTone(659, 150);
         Sound.playTone(784, 150);
         Sound.playTone(1319, 600);
@@ -79,7 +140,6 @@ public class EV3Robot implements EV3RobotMovement{
         Sound.playTone(784, 150);
         Sound.playTone(880, 150);
         Sound.playTone(740, 900);
-
         Sound.playTone(659, 150);
         Sound.playTone(784, 150);
         Sound.playTone(1319, 600);
@@ -101,6 +161,7 @@ public class EV3Robot implements EV3RobotMovement{
         Sound.playTone(988, 300);
         Sound.playTone(659, 1800);
 	}
+	//============ End Of Song Section =================================================
 	
 	// Initializes the Sensors
 	private void initMotors() {
@@ -257,5 +318,27 @@ public class EV3Robot implements EV3RobotMovement{
 		reading = colorSensorList.get(port).getColorID();
 		
 		return reading;
+	}
+
+	@Override
+	public void turnTwoLeft(int rotation, boolean immediateReturn) {
+		System.out.println("Turning Left");
+		for(EV3Motor motor : motorList) {
+			String tag = motor.getTag();
+			if(tag.equals("Left") || tag.equals("Right")) {
+				motor.rotate(-rotation, immediateReturn);
+			}
+		}
+	}
+
+	@Override
+	public void turnTwoRight(int rotation, boolean immediateReturn) {
+		System.out.println("Turning Left");
+		for(EV3Motor motor : motorList) {
+			String tag = motor.getTag();
+			if(tag.equals("Left") || tag.equals("Right")) {
+				motor.rotate(rotation, immediateReturn);
+			}
+		}
 	}
 }
