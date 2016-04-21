@@ -10,11 +10,13 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.hardware.sensor.HiTechnicCompass;
 
 public class EV3Robot implements EV3RobotMovement{
 	
 	private List<EV3Motor> motorList;
 	private List<EV3ColorSensor> colorSensorList;
+	private HiTechnicCompass compassSensor;
 	
 	public EV3Robot() {
 		System.out.println("Init Sensors...");
@@ -163,7 +165,7 @@ public class EV3Robot implements EV3RobotMovement{
 	}
 	//============ End Of Song Section =================================================
 	
-	// Initializes the Sensors
+	// Initializes the Motors
 	private void initMotors() {
 		motorList = new LinkedList<EV3Motor>();
 		
@@ -175,15 +177,26 @@ public class EV3Robot implements EV3RobotMovement{
 		Button.LEDPattern(2);
 	}
 	
-	// Initializes the Motors
+	// Initializes the Sensor
 	private void initSensors() {
 		colorSensorList = new LinkedList<EV3ColorSensor>();
 		
 		colorSensorList.add(new EV3ColorSensor(SensorPort.S1));
 		colorSensorList.add(new EV3ColorSensor(SensorPort.S2));
+		
+		compassSensor = new HiTechnicCompass(SensorPort.S4);
 		Button.LEDPattern(1);
 	}
 
+	public void dropArm() {
+		for(EV3Motor motor : motorList) {
+			if(motor.getTag().equals("Shoot")) {
+				motor.setSpeed_setAcceleration(50,50);
+				motor.rotate(170,false);
+			}
+		}
+	}
+	
 	@Override
 	public void moveForward(int rotation, boolean immediateReturn) {
 		System.out.println("Moving Forward");
@@ -266,7 +279,6 @@ public class EV3Robot implements EV3RobotMovement{
 	
 	@Override
 	public void turnLeft(int rotation, boolean immediateReturn) {
-		System.out.println("Turning Left");
 		for(EV3Motor motor : motorList) {
 			String tag = motor.getTag();
 			if(tag.equals("Left") || tag.equals("Right") || tag.equals("Back")) {
@@ -277,7 +289,6 @@ public class EV3Robot implements EV3RobotMovement{
 
 	@Override
 	public void turnRight(int rotation, boolean immediateReturn) {
-		System.out.println("Turning Right");
 		for(EV3Motor motor : motorList) {
 			String tag = motor.getTag();
 			if(tag.equals("Left") || tag.equals("Right") || tag.equals("Back")) {
@@ -311,6 +322,13 @@ public class EV3Robot implements EV3RobotMovement{
 		}
 	}
 
+	public int getCompassReading() {
+		float sample[] = new float[1];
+		compassSensor.fetchSample(sample, 0);
+		
+		return (int)sample[0];
+	}
+	
 	@Override
 	public int getReading(int port) {
 		int reading = 0;
